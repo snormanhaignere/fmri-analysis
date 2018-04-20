@@ -1,0 +1,3 @@
+# Mask real contrast/F-test CTINDEX1 with real contrast/F-test CTINDEX2?
+set fmri(conmaskCTINDEX1_CTINDEX2) 0
+

@@ -1,0 +1,3 @@
+# Group membership for input COPEINDEX
+set fmri(groupmem.COPEINDEX) 1
+

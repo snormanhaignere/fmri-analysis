@@ -1,0 +1,3 @@
+# Orthogonalise EV EVINDEX1 wrt EV EVINDEX2
+set fmri(orthoEVINDEX1.EVINDEX2) VALUE
+

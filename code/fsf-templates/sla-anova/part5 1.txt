@@ -1,0 +1,3 @@
+# Higher-level EV value for EV 1 and input COPEINDEX
+set fmri(evgCOPEINDEX.1) 1
+

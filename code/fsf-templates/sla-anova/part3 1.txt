@@ -1,0 +1,34 @@
+# EV EVINDEX title
+set fmri(evtitleEVINDEX) "EVNAME"
+
+# Basic waveform shape (EV EVINDEX)
+# 0 : Square
+# 1 : Sinusoid
+# 2 : Custom (1 entry per volume)
+# 3 : Custom (3 column format)
+# 4 : Interaction
+# 10 : Empty (all zeros)
+set fmri(shapeEVINDEX) 2
+
+# Convolution (EV EVINDEX)
+# 0 : None
+# 1 : Gaussian
+# 2 : Gamma
+# 3 : Double-Gamma HRF
+# 4 : Gamma basis functions
+# 5 : Sine basis functions
+# 6 : FIR basis functions
+set fmri(convolveEVINDEX) 0
+
+# Convolve phase (EV EVINDEX)
+set fmri(convolve_phaseEVINDEX) 0
+
+# Apply temporal filtering (EV EVINDEX)
+set fmri(tempfilt_ynEVINDEX) 0
+
+# Add temporal derivative (EV EVINDEX)
+set fmri(deriv_ynEVINDEX) 0
+
+# Custom EV file (EV EVINDEX)
+set fmri(customEVINDEX) "dummy"
+

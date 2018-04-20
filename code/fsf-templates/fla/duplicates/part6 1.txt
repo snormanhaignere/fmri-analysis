@@ -1,0 +1,3 @@
+# Real contrast_real vector CTINDEX element EVINDEX
+set fmri(con_realCTINDEX.EVINDEX) VALUE
+

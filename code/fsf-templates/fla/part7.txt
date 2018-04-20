@@ -1,0 +1,6 @@
+# Display images for contrast_orig CTINDEX
+set fmri(conpic_orig.CTINDEX) 1
+
+# Title for contrast_orig CTINDEX
+set fmri(conname_orig.CTINDEX) "CTNAME"
+

@@ -1,0 +1,6 @@
+# Display images for contrast_real CTINDEX
+set fmri(conpic_real.CTINDEX) 1
+
+# Title for contrast_real CTINDEX
+set fmri(conname_real.CTINDEX) "CTNAME"
+
