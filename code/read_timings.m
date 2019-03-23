@@ -133,12 +133,16 @@ else
         x4 = [datadir 'usub' num2str(us) '/seq/' runtype '__r' num2str(r) '_block.par'];
         if exist(x1,'file')
             [b.onsets, b.condition_indices, b.durs, ~, b.conds] = textread(x1, '%f%d%f%f%s'); %#ok<*NASGU>
+            b.para_file = x1;
         elseif exist(x2,'file')
             [b.onsets, b.condition_indices, b.durs, ~, b.conds] = textread(x2, '%f%d%f%f%s'); %#ok<*NASGU>
+            b.para_file = x1;
         elseif exist(x3,'file')
             [b.onsets, b.condition_indices, b.durs, ~, b.conds] = textread(x3, '%f%d%f%f%s'); %#ok<*NASGU>
+            b.para_file = x1;
         else
             [b.onsets, b.condition_indices, b.durs, ~, b.conds] = textread(x4, '%f%d%f%f%s'); %#ok<*NASGU>
+            b.para_file = x1;
         end
     catch me
         print_error_message(me);

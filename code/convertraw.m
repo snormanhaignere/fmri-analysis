@@ -39,8 +39,15 @@ for i = 1:length(usubs)
             
             dicomsdir = [datadir 'brain/dicoms/usub' num2str(usubs(i)) '_scan' num2str(scanid(k)) '/'];
             firstdicom = dir([dicomsdir '*-1-1.dcm']);
+            str_to_replace = '-1-1';
             if length(firstdicom)~= 1;
-                error('Error: problem reading first dicom file');
+                seconddicom = dir([dicomsdir '*-2-1.dcm']);
+                if length(seconddicom)~= 1;
+                    error('Error: problem reading first or second dicom file');
+                else
+                    firstdicom = seconddicom;
+                    str_to_replace = '-2-1';
+                end
             end
             
             if ~strcmp('struct',runtypes{j})
@@ -51,8 +58,8 @@ for i = 1:length(usubs)
                 end
                 if disdaqs > 0
                     for m = 1:disdaqs
-                        dicomfile_old = [dicomsdir strrep(firstdicom.name, '-1-1', ['-' num2str(dicomid(k)) '-' num2str(m)])];
-                        dicomfile_new = [disdaqdir strrep(firstdicom.name, '-1-1', ['-' num2str(dicomid(k)) '-' num2str(m)])];
+                        dicomfile_old = [dicomsdir strrep(firstdicom.name, str_to_replace, ['-' num2str(dicomid(k)) '-' num2str(m)])];
+                        dicomfile_new = [disdaqdir strrep(firstdicom.name, str_to_replace, ['-' num2str(dicomid(k)) '-' num2str(m)])];
                         if exist(dicomfile_old,'file')
                             unix(['mv ' dicomfile_old ' ' dicomfile_new]);
                         end
@@ -61,8 +68,8 @@ for i = 1:length(usubs)
                 
                 dicom_index = nTR + disdaqs + 1;
                 while true
-                    dicomfile_extra_old = [dicomsdir strrep(firstdicom.name, '-1-1', ['-' num2str(dicomid(k)) '-' num2str(dicom_index)])];
-                    dicomfile_extra_new = [disdaqdir strrep(firstdicom.name, '-1-1', ['-' num2str(dicomid(k)) '-' num2str(dicom_index)])];
+                    dicomfile_extra_old = [dicomsdir strrep(firstdicom.name, str_to_replace, ['-' num2str(dicomid(k)) '-' num2str(dicom_index)])];
+                    dicomfile_extra_new = [disdaqdir strrep(firstdicom.name, str_to_replace, ['-' num2str(dicomid(k)) '-' num2str(dicom_index)])];
                     if ~exist(dicomfile_extra_old,'file');
                         break;
                     else
@@ -72,7 +79,7 @@ for i = 1:length(usubs)
                 end
             end
             
-            dicomfile = [dicomsdir strrep(firstdicom.name, '-1-1', ['-' num2str(dicomid(k)) '-' num2str(disdaqs+1)])];
+            dicomfile = [dicomsdir strrep(firstdicom.name, str_to_replace, ['-' num2str(dicomid(k)) '-' num2str(disdaqs+1)])];
             if ~exist(niifile,'file') || optInputs(varargin, 'overwrite');
                 fprintf(['mri_convert --in_type siemens_dicom --out_type nii '  dicomfile '  ' niifile '\n']);
                 unix(['mri_convert --in_type siemens_dicom --out_type nii '  dicomfile '  ' niifile]);

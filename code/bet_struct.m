@@ -18,6 +18,10 @@ switch exp
         favalue = 0.15;
 end
 
+if optInputs(varargin, 'favalue')
+    favalue = varargin{optInputs(varargin, 'favalue')+1};
+end
+
 datadir = [params('rootdir') exp '/data/'];
 niidir = [datadir 'brain/nifti/usub' num2str(us) '/'];
 

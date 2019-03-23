@@ -1,5 +1,7 @@
 function [bestfreq_group, outputfile_colorwarp] = tonotopy_surf_group(expsub, hemi, fwhm, anova_thresh, min_subjects_per_voxel, varargin)
 
+root_directory = '/mindhive/nklab/u/svnh';
+
 projfrac = [0 1];
 
 switch expsub{1,1}
@@ -20,7 +22,7 @@ inputvals = [1 3 4 6];
 % outputvals = [1 2.66, 4.33, 6];
 outputvals = [1 3 4 6];
 
-emptysurf = MRIread(['~/freesurfer/fsaverage/surf/' hemi '.area.mgh']);
+emptysurf = MRIread([root_directory '/freesurfer/fsaverage/surf/' hemi '.area.mgh']);
 emptysurf.fspec = '';
 emptysurf.vol = zeros(size(emptysurf.vol));
 nverts = length(emptysurf.vol);
@@ -40,7 +42,7 @@ for i = 1:length(expsub)
     subjid = [expsub{i,1} '_us' num2str(expsub{i,2})];
     runnum = read_runs(expsub{i,1},expsub{i,2},runtype,varargin{:});
     idstring = ['fwhm' num2str(fwhm) '_projfrac' num2str(projfrac(1)) '-' num2str(projfrac(2)) '_trilinear_' runtype '_r' sprintf('%d',runnum) '_' model  '_' num2str(fwhm_vol*100,'%.0f') 'mm_anovathresh' num2str(anova_thresh) labelstring];
-    bestfreq_file = ['~/freesurfer/fsaverage/sla/' subjid '/' hemi '.bestfreq_' idstring '.mgh'];
+    bestfreq_file = [root_directory '/freesurfer/fsaverage/sla/' subjid '/' hemi '.bestfreq_' idstring '.mgh'];
     if ~exist(bestfreq_file,'file') || optInputs(varargin,'overwrite');
         tonotopy_surf(expsub{i,1}, expsub{i,2}, hemi, fwhm, anova_thresh, varargin{:});
     end
@@ -60,7 +62,7 @@ bestfreq_group.vol(vertices_above_thresh) = bestfreq_sub.vol(vertices_above_thre
 
 % write to file
 exp_unique = unique(expsub(:,1));
-outputdir = ['~/freesurfer/fsaverage/group_tonotopy/' sprintf('%s_', exp_unique{:}) 'us' sprintf('%d',expsub{:,2}) '/'];
+outputdir = [root_directory '/freesurfer/fsaverage/group_tonotopy/' sprintf('%s_', exp_unique{:}) 'us' sprintf('%d',expsub{:,2}) '/'];
 if ~exist(outputdir,'dir');
     mkdir(outputdir);
 end

@@ -2100,6 +2100,7 @@ switch exp
         
         switch evgroup
             
+
             case 'harm-f0100-200'
                 evname = {'harm-f0100', 'harm-f0200'};
                 
@@ -2169,8 +2170,42 @@ switch exp
             case 'all_pitchloc6'
                 evname = read_conditions(exp,us,'pitchloc6',varargin{:});
                 
+                
+            
+            case 'harm-f0100-70-80dB'
+                evname = {'harm-f0100-70dB','harm-f0100-75dB','harm-f0100-80dB'};
+            
             case 'harm-f0200-70-80dB'
                 evname = {'harm-f0200-70dB','harm-f0200-75dB','harm-f0200-80dB'};
+                
+            case 'harm-f0400-70-80dB'
+                evname = {'harm-f0400-70dB','harm-f0400-75dB','harm-f0400-80dB'};
+            
+            case 'harm-f0800-70-80dB'
+                evname = {'harm-f0800-70dB','harm-f0800-75dB','harm-f0800-80dB'};
+                
+            case 'harm-f01600-70-80dB'
+                evname = {'harm-f01600-70dB','harm-f01600-75dB','harm-f01600-80dB'};
+                
+                
+                
+            case 'noise-f0100-70-80dB'
+                evname = {'noise-f0100-70dB','noise-f0100-75dB','noise-f0100-80dB'};
+                
+            case 'noise-f0200-70-80dB'
+                evname = {'noise-f0200-70dB','noise-f0200-75dB','noise-f0200-80dB'};
+                
+            case 'noise-f0400-70-80dB'
+                evname = {'noise-f0400-70dB','noise-f0400-75dB','noise-f0400-80dB'};
+                
+            case 'noise-f0800-70-80dB'
+                evname = {'noise-f0800-70dB','noise-f0800-75dB','noise-f0800-80dB'};
+                
+            case 'noise-f01600-70-80dB'
+                evname = {'noise-f01600-70dB','noise-f01600-75dB','noise-f01600-80dB'};
+                
+                
+                
                 
             case 'noise-f0200-65-75dB'
                 evname = {'noise-f0200-65dB','noise-f0200-70dB','noise-f0200-75dB'};
@@ -2232,6 +2267,24 @@ switch exp
                     'noise-f0400-75dB', 'noise-f0800-75dB',...
                     'noise-f0400-80dB', 'noise-f0800-80dB',...
                     'noise-f01600-70dB', ...
+                    'noise-f01600-75dB', ...
+                    'noise-f01600-80dB'};
+                
+            case 'harm_70-75dB'
+                evname = {...
+                    'harm-f0100-70dB', 'harm-f0200-70dB',...
+                    'harm-f0100-75dB', 'harm-f0200-75dB',...
+                    'harm-f0400-70dB', 'harm-f0800-70dB',...
+                    'harm-f0400-75dB', 'harm-f0800-75dB',...
+                    'harm-f01600-70dB', ...
+                    'harm-f01600-75dB'};
+                
+            case 'noise_75-80dB'
+                evname = {...
+                    'noise-f0100-75dB', 'noise-f0200-75dB',...
+                    'noise-f0100-80dB', 'noise-f0200-80dB',...
+                    'noise-f0400-75dB', 'noise-f0800-75dB',...
+                    'noise-f0400-80dB', 'noise-f0800-80dB',...
                     'noise-f01600-75dB', ...
                     'noise-f01600-80dB'};
                 
@@ -2297,10 +2350,15 @@ switch exp
             
             case 'pitched-straight-noisevoc-65-80dB'
                 evname = {'pitched-straight-noisevoc-80dB', 'pitched-straight-noisevoc-75dB', 'pitched-straight-noisevoc-70dB', 'pitched-straight-noisevoc-65dB'};
-                            
+                
+            case 'pitched-straight-harmvoc-noisevoc-65-80dB'
+                evname = {...
+                    'pitched-straight-harmvoc-80dB', 'pitched-straight-harmvoc-75dB', 'pitched-straight-harmvoc-70dB','pitched-straight-harmvoc-65dB',...
+                    'pitched-straight-noisevoc-80dB', 'pitched-straight-noisevoc-75dB', 'pitched-straight-noisevoc-70dB', 'pitched-straight-noisevoc-65dB'};
+                
             case 'pitched-straight-harmvoc-70-75dB'
                 evname = {'pitched-straight-harmvoc-75dB', 'pitched-straight-harmvoc-70dB'};
-            
+                
             case 'pitched-straight-noisevoc-70-75dB'
                 evname = {'pitched-straight-noisevoc-75dB', 'pitched-straight-noisevoc-70dB'};
                 
@@ -2367,6 +2425,11 @@ switch exp
             case 'pitched-straight-harmvoc-noisevoc-70-75dB'
                 evname = {'pitched-straight-harmvoc-75dB', 'pitched-straight-harmvoc-70dB',...
                     'pitched-straight-noisevoc-75dB', 'pitched-straight-noisevoc-70dB'};
+                
+            case 'pitched-straight-harmvoc-noisevoc-65-80dB'
+                evname = {...
+                    'pitched-straight-harmvoc-80dB', 'pitched-straight-harmvoc-75dB', 'pitched-straight-harmvoc-70dB','pitched-straight-harmvoc-65dB',...
+                    'pitched-straight-noisevoc-80dB', 'pitched-straight-noisevoc-75dB', 'pitched-straight-noisevoc-70dB', 'pitched-straight-noisevoc-65dB'};
             
             case 'pitched-straight-harmvoc-65-80dB'
                 evname = {'pitched-straight-harmvoc-80dB', 'pitched-straight-harmvoc-75dB', 'pitched-straight-harmvoc-70dB', 'pitched-straight-harmvoc-65dB'};

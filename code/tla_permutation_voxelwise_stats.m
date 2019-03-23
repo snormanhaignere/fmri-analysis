@@ -1,6 +1,6 @@
 function [mat_file_with_all_useful_statistics, ...
-    p_gaussfit_rh_inflated_file, p_gaussfit_lh_inflated_file, p_gaussfit_file]...
-    = tla_permutation_voxelwise_stats(P,volume_or_surface,tla_directory_name,varargin)
+    p_gaussfit_rh_inflated_file, p_gaussfit_lh_inflated_file, p_gaussfit_file, ...
+    tla_directory] = tla_permutation_voxelwise_stats(P,volume_or_surface,tla_directory_name,varargin)
 
 % function mat_file_with_all_useful_statistics = tla_permutation_voxelwise_stats(P,volume_or_surface,tla_directory_name,varargin)
 % 
@@ -424,9 +424,10 @@ if ~all_files_exist || optInputs(varargin, 'overwrite')
             for j = 1:2
                 
                 if optInputs(varargin, 'monkey')
-                    nsurfpts_monkeys = [157 143689 143035; 158 134082 135694; 170 83802 83075];
-                    xi = ismember(nsurfpts_monkeys(:,1), P(1).us);
-                    nsurfpts = nsurfpts_monkeys(xi,j+1);
+                    %                     nsurfpts_monkeys = [157 143689 143035; 158 134082 135694; 170 83802 83075];
+                    %                     xi = ismember(nsurfpts_monkeys(:,1), P(1).us);
+                    %                     nsurfpts = nsurfpts_monkeys(xi,j+1);
+                    nsurfpts = nvertices_freesurfer(subjid, P(1).us, hemis{q});
                 else
                     % number of surface points on the fsaverage template brain
                     nsurfpts = 163842;

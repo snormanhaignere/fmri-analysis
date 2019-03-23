@@ -26,6 +26,7 @@ for i = 1:length(usubs)
                     fla_matlab(exp,usubs(i),runtypes{j},runnum(k),hrf_name,volume_or_surface,input_fname,output_fname,'hemi','rh',varargin{:})
                     fla_matlab(exp,usubs(i),runtypes{j},runnum(k),hrf_name,volume_or_surface,input_fname,output_fname,'hemi','lh',varargin{:})
             end
+            close all;
         end
     end
 end

@@ -58,13 +58,18 @@ end
 nvertices = size(vertices,1);
 
 % set default color data based on gyral/sulcal divisions
-curv = read_curv([params('rootdir') 'freesurfer/' subjid '/surf/' hemi '.curv']);
-try
-    colordata(any(isnan(colordata),2) & curv>0,:) = 0.3;
-    colordata(any(isnan(colordata),2) & curv<0,:) = 0.5;
-catch
+curv_file = [params('rootdir') 'freesurfer/' subjid '/surf/' hemi '.curv'];
+if exist(curv_file, 'file')
+    curv = read_curv(curv_file);
+    try
+        colordata(any(isnan(colordata),2) & curv>0,:) = 0.3;
+        colordata(any(isnan(colordata),2) & curv<0,:) = 0.5;
+    catch
+        colordata(any(isnan(colordata),2),:) = 0.3;
+        warning('Curvature file not read properly.');
+    end    
+else
     colordata(any(isnan(colordata),2),:) = 0.3;
-    warning('Curvature file not read properly.');
 end
 
 % create figure of specified size
@@ -119,6 +124,12 @@ switch hemi
                     camtarget([10 15 -10]);
                     campos(1.0e+03 * [1.3897    0.9535   -0.3139]);
                     magfac = 1.4;
+                case 372
+                    camup([-0.1410    0.4865    0.8622]);
+                    camva(4.3);
+                    camtarget([10 15 -10]);
+                    campos(1.0e+03 * [1.3897    0.9535   -0.3139]);
+                    magfac = 1.4;
                 otherwise
                     error('No matching freesurfer subject');
             end
@@ -160,6 +171,12 @@ switch hemi
                     camtarget([-30 10 -5]);
                     magfac = 1.5;
                 case 373
+                    camup([0.3850    0.3973    0.8330]);
+                    campos(1.0e+03*[-1.4300    0.9813    0.1788]);
+                    camva(4.3);
+                    camtarget([-30 10 -5]);
+                    magfac = 1.5;
+                case 372
                     camup([0.3850    0.3973    0.8330]);
                     campos(1.0e+03*[-1.4300    0.9813    0.1788]);
                     camva(4.3);

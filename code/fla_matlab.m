@@ -173,7 +173,7 @@ if  ~exist(design_file,'file') || ~exist(beta_file,'file') || ~exist(psc_file,'f
     
     % HRF
     switch hrf_name
-        case {'BOLD','MION','MION_CUSTOM1'};
+        case {'BOLD','MION','MION_CUSTOM1'}
             hrf_type = 'impulse_response_function';
             h = hrf_fsfast_gamma(1/sr, hrf_name, 'noplot');
             h = h/abs(sum(h));
@@ -247,9 +247,13 @@ if  ~exist(design_file,'file') || ~exist(beta_file,'file') || ~exist(psc_file,'f
         tic;
         
         if optInputs(varargin, 'permute_within_folds')
-            n_folds = varargin{optInputs(varargin, 'permute_within_folds')+1};
-            n_conds_per_fold = length(b.conds)/n_folds;
-            conds_reshaped = reshape(b.conds, [n_conds_per_fold, n_folds]);
+            try
+                n_folds = varargin{optInputs(varargin, 'permute_within_folds')+1};
+                n_conds_per_fold = length(b.conds)/n_folds;
+                conds_reshaped = reshape(b.conds, [n_conds_per_fold, n_folds]);
+            catch
+                keyboard
+            end
         else
             n_folds = 1;
         end
@@ -386,7 +390,7 @@ if  ~exist(design_file,'file') || ~exist(beta_file,'file') || ~exist(psc_file,'f
         
         % copyfile([whitematter_PCs_directory 'us' num2str(us) '_' runtype '_r' num2str(r) '_' input_fname '.mat'], [whitematter_PCs_directory 'us' num2str(us) '_' runtype '_r' num2str(r) '.mat']);
         whitematter_mat_file = [whitematter_PCs_directory 'us' num2str(us) '_' runtype '_r' num2str(r) '.mat'];
-        if ~exist(whitematter_mat_file,'file')
+        if ~exist(whitematter_mat_file,'file') || optInputs(varargin, 'overwrite')
             
             struct_directory = [params('rootdir') exp '/analysis/preprocess/usub' num2str(us) '/struct_r1/'];
             wm_highres_2mm = [struct_directory 'white_matter_2mm_highres.nii.gz'];
@@ -442,8 +446,9 @@ if  ~exist(design_file,'file') || ~exist(beta_file,'file') || ~exist(psc_file,'f
             end
             
             % svd
-            [U,S] = svd(wm_matrix, 'econ');
-            exvar = cumsum(diag(S).^2 / sum(diag(S).^2));
+            [U,D] = svd(wm_matrix, 'econ');
+            exvar = cumsum(diag(D).^2 / sum(diag(D).^2));
+            clear D;
             
             save(whitematter_mat_file, 'U', 'exvar');
             
@@ -1151,13 +1156,15 @@ for i = 1:size(contrasts,1)
             cope_white_file =  [contrast_directory 'cope_white_' contrastnames{i} '.mat'];
             cope_var_white_file =  [contrast_directory 'cope_var_white_' contrastnames{i} '.mat'];
             
+            
         otherwise
             error('"volume_or_surface must be either "volume", "surface", or "downsampled_surface"');
     end
     
-    clear S;
     S.p_file{i,1} = contrastnames{i};
     S.p_file{i,2} = p_file;
+    S.cope_file{i,1} = contrastnames{i};
+    S.cope_file{i,2} = cope_file;
     
     if ~exist(t_file,'file') || ~exist(p_file,'file') || ~exist(cope_file,'file') || ~exist(cope_var_file,'file') || optInputs(varargin, 'overwrite')
         
@@ -1852,7 +1859,6 @@ if optInputs(varargin, 'reg2highres') && strcmp(volume_or_surface,'volume')
     end
 end
 
-close all;
 %% Old Code
 
 

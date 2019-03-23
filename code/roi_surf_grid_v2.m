@@ -67,6 +67,12 @@ psc = nan([ length(test_info.runs), length(test_info.conditions), ...
 n_voxels_per_run_and_threshold = ...
     nan([length(test_info.runs), n_thresholds_per_localizer]);
 
+if optInputs(varargin, 'rand_seed')
+    rand_seed = varargin{optInputs(varargin, 'rand_seed')+1};
+else
+    rand_seed = randi(1e6);
+end
+
 for k = 1:length(test_info.runs) % loop through runs
     
     if ~optInputs(varargin, 'suppress-output')
@@ -93,7 +99,8 @@ for k = 1:length(test_info.runs) % loop through runs
         xi = strcmp(test_info.conditions{j}, conditions_for_this_run);
         responses_rh = pscmap.G.grid_data{1}(:,:,xi);
         responses_lh = pscmap.G.grid_data{2}(:,:,xi);
-        voxel_psc(xi, :) = [responses_rh(:)', responses_lh(:)'];
+        %%% BUG %%% voxel_psc(j, :) was voxel_psc(xi, :)
+        voxel_psc(j, :) = [responses_rh(:)', responses_lh(:)'];
     end
     clear pscmap;
     
@@ -119,24 +126,23 @@ for k = 1:length(test_info.runs) % loop through runs
             % distance of localizer runs to test run
             dist = (localizer_runs_to_use - test_info.runs(k)).^2;
             
-            try
-                % which runs to use based on distance
-                switch localizer_info(j).use_nearest_or_farthest
-                    case 'nearest'
-                        [~,xi] = sort(dist, 'ascend');
-                    case 'farthest'
-                        fprintf('Using the farthest runs\n'); drawnow;
-                        [~,xi] = sort(dist, 'descend');
-                    otherwise
-                        error('nearest_or_farthest_runs cannot be %s', ...
-                            localizer_info(j).use_nearest_or_farthest);
-                end
-                localizer_runs_to_use = ...
-                    localizer_runs_to_use(xi(1:localizer_info(j).max_runs_to_use));
-                clear dist;
-            catch
-                keyboard
+            % which runs to use based on distance
+            switch localizer_info(j).use_nearest_or_farthest
+                case 'nearest'
+                    [~,xi] = sort(dist, 'ascend');
+                case 'farthest'
+                    fprintf('Using the farthest runs\n'); drawnow;
+                    [~,xi] = sort(dist, 'descend');
+                case 'random'
+                    ResetRandStream2(rand_seed + k);
+                    xi = randperm(length(localizer_runs_to_use));
+                otherwise
+                    error('nearest_or_farthest_runs cannot be %s', ...
+                        localizer_info(j).use_nearest_or_farthest);
             end
+            localizer_runs_to_use = ...
+                localizer_runs_to_use(xi(1:localizer_info(j).max_runs_to_use));
+            clear dist;
             
         end
         
@@ -147,8 +153,8 @@ for k = 1:length(test_info.runs) % loop through runs
         
         % print the runs being used
         if ~optInputs(varargin, 'suppress-output')
-            fprintf('Localizer: %s, runs %s\n', ...
-                localizer_info(j).contrast, sprintf('%d',localizer_runs_to_use));
+            fprintf('Localizer: %s, runs%s\n', ...
+                localizer_info(j).contrast, sprintf('-%d',localizer_runs_to_use));
             drawnow;
         end
         
@@ -244,9 +250,6 @@ n_voxels_per_run_and_threshold = reshape(n_voxels_per_run_and_threshold, ...
 % return conditions used
 conditions = test_info.conditions;
 
-
-
-
 % find/compute desired psc file
 function psc_file = test_psc_file(test_info, us, test_run, ...
     fwhm, grid_roi, grid_spacing_mm, varargin)
@@ -271,6 +274,11 @@ else
     hrf = 'BOLD';
 end
 
+% double check above hrf assignment worked
+if ~isempty(strfind(test_info.exp, 'monkey'))
+    assert(strcmp(hrf, 'MION_CUSTOM1'));
+end
+
 % first level analysis script
 % returns a structure with the needed file
 S = fla_matlab(...
@@ -283,9 +291,6 @@ S = fla_matlab(...
 
 % return the psc file
 psc_file = S.psc_file;
-
-
-
 
 % helper function that find the appropriate file with p-values
 function pstat_file = localizer_pstat_file(...
@@ -306,10 +311,6 @@ else % second level analysis
         fwhm, grid_spacing_mm, grid_roi, varargin{:});
     
 end
-
-
-
-
 
 % localizer file for a localizer with a single run
 function pstat_file = fla_pstat_file(...
@@ -334,6 +335,11 @@ if optInputs(varargin, 'monkey')
     hrf = 'MION_CUSTOM1';
 else
     hrf = 'BOLD';
+end
+
+% double check above hrf assignment worked
+if ~isempty(strfind(localizer_info.exp, 'monkey'))
+    assert(strcmp(hrf, 'MION_CUSTOM1'));
 end
 
 % first level analysis script
@@ -366,11 +372,6 @@ switch localizer_info.stat_type
         error('stat_type cannot be %s', localizer_info.stat_type)
         
 end
-
-
-
-
-
 
 % localizer file for a localizer with many runs
 function pstat_file = sla_pstat_file(...
@@ -419,7 +420,7 @@ switch localizer_info.stat_type
         
         % create parameter structure
         clear P;
-        for q = 1:length(localizer_runs_to_use);
+        for q = 1:length(localizer_runs_to_use)
             P(q).exp = localizer_info.exp; %#ok<*AGROW,*SAGROW>
             P(q).us = us;
             P(q).runtype = localizer_info.runtype;
@@ -441,7 +442,7 @@ switch localizer_info.stat_type
         end
         
         % number of permutations per run
-        if optInputs(varargin, 'monkey');
+        if optInputs(varargin, 'monkey')
             n_perms = 100;
         else
             n_perms = 10e3;
@@ -474,10 +475,6 @@ switch localizer_info.stat_type
         error('stat_type cannot be %s', localizer_info.stat_type)
         
 end
-
-
-
-
 
 function localizer_info = ...
     default_localizer_parameters(localizer_info, us, test_info, varargin)
